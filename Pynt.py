@@ -1,10 +1,14 @@
-import time as tim
 import pygame
 
 pygame.init()
 from pygame import *
 
-win = pygame.display.set_mode((1250, 726))
+WINX = 1250
+WINY = 726
+
+empty = (0,0,0,0)
+win = pygame.display.set_mode((WINX, WINY))
+alpha = pygame.Surface((WINX, WINY),pygame.SRCALPHA)
 
 pygame.display.set_caption("Pynt 0.5")
 
@@ -18,9 +22,9 @@ BUTTONWIDTH = 65
 BUTTONSPACING = 10
 ishighlighted = False
 SCREENEDGEXLEFT = 1
-SCREENEDGEXRIGHT = 1249
+SCREENEDGEXRIGHT = WINX-1
 SCREENEDGEYUP = 1
-SCREENEDGEYDOWN = 725 
+SCREENEDGEYDOWN = WINY-1
 
 colors = [(255,0,0),(255,132,0),(255,255,0),(0,255,0),(0,255,255),(31,79,255),(95,0,184),(255,0,255)]
 
@@ -47,7 +51,7 @@ while run:
 
     startx = 10
     endx = 75
-    starty = 10 
+    starty = 10
     endy = 75
 
 # рисует песочные часы лол    pygame.draw.polygon(win,(255,255,255), [(mx,my),(mx10,my10),(mx,my10),(mx10,my)])
@@ -74,29 +78,42 @@ while run:
                 width = width + 1
 
 #цвета
-    b = -1
     if my <= 100:
+        
         if ismousepressed == True:
             for _a in range(len(colors)):
-                b = b+1
-                if mx <=endx:
-                    if mx >= startx:
-                        brushcolor = colors[b] 
-                startx = endx + 10 
-                endx = startx + BUTTONWIDTH
-                if mx >= 610:
-                    brushcolor = (255,255,255)
-            if mx <= 750:
-                if mx >= 685:
-                    brushcolor = (0,0,0)
-            if mx <= 825:
-                if mx >= 760:
-                    pygame.draw.rect(win,(0,0,0),(0,100,1250,726))
+                if mx <=endx and mx >= startx :
+                    brushcolor = colors[_a]
+                    pygame.draw.rect(alpha,(0,0,0,100),(startx,starty,BUTTONWIDTH,BUTTONWIDTH))
+                    win.blit(alpha,(0,0))
+                startx = endx + BUTTONSPACING
+                endx = startx + BUTTONWIDTH      
+            
+            circlex = startx + RADIUS
+            
+            if mx >= startx and mx >= startx :
+                pygame.draw.circle(alpha,(0,0,0,25),(circlex,45),(32))
+                brushcolor = (255,255,255)
+                win.blit(alpha,(0,0))
+            startx = endx + BUTTONSPACING
+            endx = startx + BUTTONWIDTH
+            circlex = startx + RADIUS
+            if mx <= endx and mx >= startx :
+                brushcolor = (0,0,0)
+            startx = endx + BUTTONSPACING
+            endx = startx + BUTTONWIDTH
+            circlex = startx + RADIUS
+            if mx <= endx and mx >= startx :
+                pygame.draw.rect(win,(0,0,0),(0,100,WINX,WINY))
+                pygame.draw.line(alpha,(0,0,0,30),(startx,endy),(endx,starty),10)
+                pygame.draw.line(alpha,(0,0,0,30),(startx,starty),(endx,endy),10)
+                win.blit(alpha,(0,0))
 
     if prevx != None:
         if ismousepressed == True:
                 pygame.draw.line(win,(brushcolor),(mx,my),(prevx,prevy),width)
 
+    alpha.fill(empty)
     prevx = mx
     prevy = my
     pygame.time.delay(0)
