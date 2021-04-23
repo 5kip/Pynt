@@ -115,36 +115,6 @@ while run:
             ismousepressed = True
         if event.type == pygame.MOUSEBUTTONUP:
             ismousepressed = False
-            if not ismousepressed and my <=100:
-                for i in range(len(colors)):
-                    if mx <=endx and mx >= startx :
-                        brushcolor = colors[i]
-                        pygame.draw.rect(alpha,(0,0,0,100),(100,100,BUTTONWIDTH,BUTTONWIDTH))
-                        win.blit(alpha,(0,0))
-                        startx = endx + BUTTONSPACING
-                        endx = startx + BUTTONWIDTH    
-                        if brushcolor == colors[(5)]:
-                            if currentukraine == neededukraine:
-                                neededukraine = neededukraine + 1
-                                сurrentukraine = currentukraine + 1
-                                yellowallowed = True
-                            elif currentukraine == maxukraine:
-                                neededukraine = 0
-                                currentukraine = 0
-                        else:
-                            ClearUkraine()
-                    if brushcolor == colors[2]:
-                        if yellowallowed:
-                            if currentukraine == neededukraine:
-                                neededukraine = neededukraine + 1
-                                currentukraine = currentukraine + 1
-                                bgallowed = True
-                            elif currentukraine == maxukraine:
-                                neededukraine = 0
-                                currentukraine = 0
-                    else:
-                        ClearUkraine()
-        circlex = startx + RADIUS
         if event.type == pygame.MOUSEWHEEL:
             if width == 50:
                 width = 1
@@ -236,7 +206,7 @@ while run:
     if currentukraine == 3:
         OHYEAUKRAINE = True
     if OHYEAUKRAINE:
-        mixer.music.load("secret.mp3")
+        mixer.music.load("secret.ogg")
         mixer.music.play(-1)
         pygame.draw.rect(win,(75,75,255),(0,0,WINX,400))
         pygame.draw.rect(win,(255,255,0),(0,400,WINX,WINY))
