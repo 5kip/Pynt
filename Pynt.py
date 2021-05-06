@@ -105,15 +105,13 @@ def drawcross(middlex , rightdown):
     pygame.draw.line(drawing,(255,0,0),(middlex,10),(825,75),10)
 
 
-colors = [(255,0,0),(255,132,0),(255,255,0),(0,255,0),(0,255,255),(31,79,255),(95,0,184),(255,0,255)]
+colors = [(255,0,0,255),(255,132,0,255),(255,255,0,255),(0,255,0,255),(0,255,255,255),(31,79,255,255),(95,0,184,255),(255,0,255,255)]
 BLUE_INDEX = 5
 YELLOW_INDEX = 2
 
 
 run = True
 while run:
-    print(empty)
-    drawing.fill(empty)
     pressedkey = pygame.key.get_pressed()
     mx, my = pygame.mouse.get_pos()
 
@@ -204,7 +202,9 @@ while run:
 
             startx = endx + BUTTONSPACING
             endx = startx + BUTTONWIDTH
-        
+
+    nextbgcolor = (bg_color_index + 1) % len(BGCOLORLIST)
+    pygame.draw.circle(drawing, BGCOLORLIST[nextbgcolor], (WINX-15,WINY-15), 10)
 
 # рисует песочные часы лол    pygame.draw.polygon(win,(255,255,255), [(mx,my),(mx10,my10),(mx,my10),(mx10,my)])
     if my >= WINY - MOUSE_LEFT_SCREEN_OFFSET or my <= MOUSE_LEFT_SCREEN_OFFSET or mx >= WINX - MOUSE_LEFT_SCREEN_OFFSET or mx <= MOUSE_LEFT_SCREEN_OFFSET:
@@ -216,11 +216,9 @@ while run:
             ismousepressed = True
         elif event.type == pygame.MOUSEBUTTONUP:
             ismousepressed = False
-
             new_color = select_color()
             if new_color != None:
                 brush_color = new_color
-
             if mx > WINX - RESET_BACKGROUND_BUTTON_OFFSET and my > WINY - RESET_BACKGROUND_BUTTON_OFFSET:
                 bg_color_index = (bg_color_index + 1) % len(BGCOLORLIST)
                 nextbgcolor = (bg_color_index + 1) % len(BGCOLORLIST)
