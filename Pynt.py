@@ -3,11 +3,14 @@ import pygame
 pygame.init()
 from pygame import *
 from pygame import mixer
+
 mixer.init()
+
 WINX = 1250
 WINY = 726
 
 empty = (0,0,0,0)
+
 win = pygame.display.set_mode((WINX, WINY))
 alpha = pygame.Surface((WINX, WINY),pygame.SRCALPHA)
 drawing = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
@@ -23,20 +26,17 @@ RADIUS = 32
 BUTTONWIDTH = 65
 BUTTONSPACING = 10
 RESET_BACKGROUND_BUTTON_OFFSET = 30
-
 MOUSE_LEFT_SCREEN_OFFSET = 1
-
 WIDTHCIRCLEPOS = (1190,50)
 BGCOLORLIST =([0,0,0],[100,100,100],[200,200,200],[255,255,255],[100,100,255])
 bg_color_index = 0
 is_ukraine_action_started = False
+pressedkey = pygame.key.get_pressed()
+CurrentBGColor = BGCOLORLIST[bg_color_index]
 
 class Ukraine:
     state       : int = 0
     final_state : int = 5
-
-    def show_state(self):
-        print(f"State is now {self.state}")
 
     def clicked_blue(self):
         if self.state == 0:
@@ -70,6 +70,34 @@ class Ukraine:
 
 ukraine = Ukraine() # ukraine = OBJECT
 
+class USSR:
+    state       = 0
+    final_state = 6
+
+    def clicked_red():
+        if state  != 0 :
+            state  = 0
+        else:
+            state  = 1
+    
+    def clicked_yellow():
+        if state != 1 :
+            state = 0
+        else:
+            state = 2
+
+    def pressed_r():
+        if state != 2 :
+            state = 0
+        else:
+            state = 3
+    
+    def BG_changed():
+        if state != 3 or 4 or 5 or final_state :
+            state = 0
+        else:
+            state = state + 1
+
 
 
 def drawcross(middlex , rightdown):
@@ -84,6 +112,8 @@ YELLOW_INDEX = 2
 
 run = True
 while run:
+    print(empty)
+    drawing.fill(empty)
     pressedkey = pygame.key.get_pressed()
     mx, my = pygame.mouse.get_pos()
 
@@ -115,9 +145,6 @@ while run:
     pygame.draw.circle(drawing,(brush_color),WIDTHCIRCLEPOS,brush_width*0.5)
 
     def select_color():
-
-        print("Hello")
-
         if my > 100:
             return
 
@@ -150,10 +177,12 @@ while run:
 
         # Cross
         if mx <= endx and mx >= startx:
-            drawing.fill(empty) # Clear the screen
+            drawing.fill
+            drawing.set_alpha(255)
 
         startx = endx + BUTTONSPACING
         endx = startx + BUTTONWIDTH
+
 
     def highlight_color():
         if my > 100 or not ismousepressed:
@@ -198,7 +227,6 @@ while run:
                 pygame.draw.circle(drawing, BGCOLORLIST[nextbgcolor], (WINX-15,WINY-15), 10)
                 pygame.draw.rect(win,(BGCOLORLIST[bg_color_index]),(0,0,WINX,WINY))
                 ukraine.changed_bg()
-
         elif event.type == pygame.MOUSEWHEEL:
             if brush_width == 50:
                 brush_width = 1
@@ -231,8 +259,6 @@ while run:
         pygame.draw.rect(win,(75,75,255),(0,0,WINX,400))
         pygame.draw.rect(win,(255,255,0),(0,400,WINX,WINY))
 
-    ukraine.show_state()
-    print(brush_color)
 
     win.blit(drawing,(0,0))
     win.blit(alpha,(0,0))
