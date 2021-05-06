@@ -175,8 +175,7 @@ while run:
 
         # Cross
         if mx <= endx and mx >= startx:
-            drawing.fill
-            drawing.set_alpha(255)
+            drawing.fill(empty)
 
         startx = endx + BUTTONSPACING
         endx = startx + BUTTONWIDTH
@@ -253,11 +252,12 @@ while run:
     if ukraine.is_finished() and not is_ukraine_action_started:
         is_ukraine_action_started = True
         mixer.music.load("secret.ogg")
-        mixer.music.play(-1)
+        mixer.music.play(0)
         pygame.draw.rect(win,(75,75,255),(0,0,WINX,400))
         pygame.draw.rect(win,(255,255,0),(0,400,WINX,WINY))
 
-
+    if not is_ukraine_action_started:
+        win.fill(BGCOLORLIST[bg_color_index])
     win.blit(drawing,(0,0))
     win.blit(alpha,(0,0))
     alpha.fill(empty)
