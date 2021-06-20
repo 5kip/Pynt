@@ -1,11 +1,9 @@
 import pygame
+import Text as txt
 
 pygame.init()
 from pygame import *
-from pygame import mixer 
-from Tkinter import *
-
-Root = Tk()
+from pygame import mixer
 
 mixer.init()
 
@@ -21,7 +19,6 @@ scrolling_things = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
 
 pygame.display.set_caption("Pynt 0.6")
 
-opacity = Scale(Root, from_=0, to = 100)
 prevx = None
 prevy = None
 ismousepressed = False
@@ -42,9 +39,17 @@ is_ussr_action_started = False
 pressedkey = pygame.key.get_pressed()
 CurrentBGColor = BGCOLORLIST[bg_color_index]
 is_transparence_moving = False
-brush_transparency = 100
+brush_transparency = 255
 transparency_slider_x = 1043
 brush_color = (255,255,255,brush_transparency)
+istyping = False
+selecting_place_to_type = False
+ 
+
+# classes
+
+
+
 
 class Ukraine:
     state       : int = 0
@@ -86,14 +91,17 @@ class USSR:
     final_state = 1
 
     def clicked_red(self):
-        print("1232321")
-    
+        if self.state != 0:
+            state = 0
+        else:
+            state = 1
+
     def clicked_yellow(self):
         if self.state != 1 :
             self.state = 0
         else:
             self.state = 2
-        
+
     def clicked_other_color(self):
         self.state = 0
 
@@ -102,20 +110,20 @@ class USSR:
             self.state = 0
         else:
             self.state = 3
-        
+
     def released_r(self):
         if self.state != 3:
             self.state = 0
         else:
             self.state = 2
-    
+
     def BG_changed(self):
         if self.state != 3 or 4 or 5 or self.final_state :
             self.state = 0
         else:
             self.state = self.state + 1
 
-    def Ussr_state_check(self):    
+    def Ussr_state_check(self):
         if self.state >= self.final_state:
             print("123")
 Ussr = USSR()
@@ -124,27 +132,55 @@ def drawcross(middlex , rightdown):
     pygame.draw.line(drawing,(255,0,0),(middlex,75),(825,10),10)
     pygame.draw.line(drawing,(255,0,0),(middlex,10),(825,75),10)
 
+def Scale(surface, color, slider_color, x, y, length, width, units_per_pixel, variable_to_change):
+    slider_radius = width + 1
+    slider_x = None
+    #if slider_x != mx:
+    slider_x      = x + length
+    slider_y          = y + width / 2
+    pygame.draw.rect(surface, (color), (x,y,length,width))
+    if slider_x >= x + length + 1:
+        slider_x = x + length
+    if slider_x <= x - 1:
+        slider_x = x - length
+    if my >= slider_y - slider_radius / 2 and my <= slider_y + slider_radius / 2 and mx >= slider_x - slider_radius / 2 and mx <= slider_x + slider_radius / 2 and ismousepressed:
+        slider_x = mx
+    pygame.draw.circle(surface, (slider_color),(slider_x, slider_y), slider_radius)
+
+
+     
+
+
+
+
+
+# app
 
 run = True
 while run:
+
     pressedkey = pygame.key.get_pressed()
     mx, my = pygame.mouse.get_pos()
 
     startx = BUTTONSPACING
     endx = startx + BUTTONWIDTH
 
-    colors = [(255,0,0,brush_transparency),(255,132,0,brush_transparency),(255,255,0,brush_transparency),(0,255,0,brush_transparency),(0,255,255,brush_transparency),(31,79,255,brush_transparency),(95,0,184,brush_transparency),(255,0,255,brush_transparency)]
+    colors = [(255,0,0),(255,132,0),(255,255,0),(0,255,0),(0,255,255),(31,79,255),(95,0,184),(255,0,255)]
 
-    starty = BUTTONSPACING 
+    Scale(drawing, (200,200,200), (100,100,100), 500, 300, 300, 20, 1, brush_transparency)
+
+
+    starty = BUTTONSPACING
     endy = starty + BUTTONWIDTH
 
     pygame.draw.rect(drawing,(112,112,112),(0,0,WINX,100))
-    #K_LSHIFT
+
+
     for i in range(len(colors)):
         pygame.draw.rect(drawing,colors[i],(startx,starty,BUTTONWIDTH,BUTTONWIDTH))
         startx = endx + BUTTONSPACING
         endx = startx + BUTTONWIDTH
-    
+
     pygame.draw.rect(drawing, (150 , 150 , 150), (850,10,200,80))
     pygame.draw.rect(drawing, (200, 200, 200), (915,20, 127,5))
     pygame.draw.circle(scrolling_things, (230, 230, 230), (transparency_slider_x, 22), 5)
@@ -157,7 +193,7 @@ while run:
 
     startx = endx + BUTTONSPACING
     endx = startx + BUTTONWIDTH
-    startx = endx + BUTTONSPACING 
+    startx = endx + BUTTONSPACING
     endx = startx + BUTTONWIDTH
 
     drawcross(startx, endx)
@@ -185,12 +221,12 @@ while run:
                 else:
                     ukraine.clicked_other_color()
                     Ussr.clicked_other_color()
-                
+
                 return colors[i]
 
             startx = startx + BUTTONWIDTH + BUTTONSPACING
-            endx = startx + BUTTONWIDTH 
-        
+            endx = startx + BUTTONWIDTH
+
         for color in [(255,255,255), (0,0,0)]:
             # White circle
             if mx <= endx and mx >= startx:
@@ -204,19 +240,18 @@ while run:
             drawing.fill(empty)
 
     if my <= 30:
-        print(brush_transparency)
-        brush_transparency = (transparency_slider_x - 915)
+        brush_transparency = (transparency_slider_x - 915) * 2 - 1
         if transparency_slider_x <= 914:
             transparency_slider_x = 915
         if transparency_slider_x >= 1044:
             transparency_slider_x = 1043
         if mx >= transparency_slider_x - 5 and mx <= transparency_slider_x + 5 and ismousepressed:
             is_transparence_moving = True
-        else: 
+        else:
             is_transparence_moving = False
         if ismousepressed:
             transparency_slider_x = mx
-        
+
 
         startx = endx + BUTTONSPACING
         endx = startx + BUTTONWIDTH
@@ -225,7 +260,7 @@ while run:
     def highlight_color():
         if my > 100 or not ismousepressed:
             return
-        
+
         startx = BUTTONSPACING
         endx = startx + BUTTONWIDTH
 
@@ -234,7 +269,7 @@ while run:
                 pygame.draw.rect(alpha, (0,0,0,100), (startx,starty,BUTTONWIDTH,BUTTONWIDTH))
 
             startx = startx + BUTTONWIDTH + BUTTONSPACING
-            endx = startx + BUTTONWIDTH 
+            endx = startx + BUTTONWIDTH
 
         for i in range(2):
             if mx <= endx and mx >= startx:
@@ -246,9 +281,8 @@ while run:
     nextbgcolor = (bg_color_index + 1) % len(BGCOLORLIST)
     pygame.draw.circle(drawing, BGCOLORLIST[nextbgcolor], (WINX-15,WINY-15), 10)
 
-# рисует песочные часы лол    pygame.draw.polygon(win,(255,255,255), [(mx,my),(mx10,my10),(mx,my10),(mx10,my)])
     if my >= WINY - MOUSE_LEFT_SCREEN_OFFSET or my <= MOUSE_LEFT_SCREEN_OFFSET or mx >= WINX - MOUSE_LEFT_SCREEN_OFFSET or mx <= MOUSE_LEFT_SCREEN_OFFSET:
-        ismousepressed = False 
+        ismousepressed = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -275,7 +309,6 @@ while run:
             else                :
                 brush_width = brush_width + 1
 
-  
 #цвета
 
     highlight_color()
@@ -297,7 +330,7 @@ while run:
         prevy = my
     elif not pressedkey[K_LSHIFT]:
         prevx = None
-    
+
     if ukraine.is_finished() and not is_ukraine_action_started:
         is_ukraine_action_started = True
         mixer.music.load("secret.ogg")
@@ -311,10 +344,9 @@ while run:
 
     Ussr.Ussr_state_check()
 
-    opacity.pack()
-
     if not is_ukraine_action_started:
         win.fill(BGCOLORLIST[bg_color_index])
+
     win.blit(drawing,(0,0))
     win.blit(alpha,(0,0))
     win.blit(scrolling_things,(0,0))
