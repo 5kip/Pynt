@@ -1,11 +1,12 @@
 import pygame
-import Text as txt
 
 pygame.init()
 from pygame import *
 from pygame import mixer
 
 mixer.init()
+
+import Text as txt
 
 WINX = 1250
 WINY = 726

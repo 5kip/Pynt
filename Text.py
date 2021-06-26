@@ -6,13 +6,6 @@ from pygame import mixer
 
 mixer.init()
 
-WINX = 1250
-WINY = 726
-
-win = pygame.display.set_mode((WINX, WINY))
-textsurface = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
-drawing = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
-
 istyping = False
 ismousepressed = False
 choosing_place_for_text = False
