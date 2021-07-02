@@ -17,13 +17,14 @@ win = pygame.display.set_mode((WINX, WINY))
 alpha = pygame.Surface((WINX, WINY),pygame.SRCALPHA)
 drawing = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
 scrolling_things = pygame.Surface((WINX,WINY),pygame.SRCALPHA)
+textsurface = pygame.Surface((WINX, WINY), pygame.SRCALPHA)
 
 pygame.display.set_caption("Pynt 0.6")
 
 prevx = None
 prevy = None
 ismousepressed = False
-brush_width = 1
+brush_width = 5
 BLUE_INDEX = 5
 YELLOW_INDEX = 2
 RED_INDEX = 1
@@ -159,8 +160,6 @@ def Scale(surface, color, slider_color, x, y, length, width, units_per_pixel, va
 
 run = True
 while run:
-
-    pressedkey = pygame.key.get_pressed()
     mx, my = pygame.mouse.get_pos()
 
     startx = BUTTONSPACING
@@ -170,6 +169,7 @@ while run:
 
     Scale(drawing, (200,200,200), (100,100,100), 500, 300, 300, 20, 1, brush_transparency)
 
+    txt.dotext(win, textsurface, textsurface, ismousepressed)
 
     starty = BUTTONSPACING
     endy = starty + BUTTONWIDTH
@@ -309,8 +309,14 @@ while run:
                 brush_width = brush_width - 1
             else                :
                 brush_width = brush_width + 1
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                txt.text.text = txt.text.text[0:-1]
+            else:
+                txt.text.text += event.unicode
 
 #цвета
+# хохол
 
     highlight_color()
 
@@ -339,9 +345,10 @@ while run:
         pygame.draw.rect(win,(75,75,255),(0,0,WINX,400))
         pygame.draw.rect(win,(255,255,0),(0,400,WINX,WINY))
 
+    pygame.draw.rect(drawing, (txt.text.act_rect_color), txt.text.activation_rect)
+
     if is_ussr_action_started:
         is_ussr_action_started = False
-        print("123")
 
     Ussr.Ussr_state_check()
 
